@@ -58,8 +58,7 @@ jobs:
           
           mkdir -p app
         
-          curl -L -o app/CHSN.apk "https://github.com/kapiljain630/CHSNAppium/releases/download/v2.0.49/CHSN-2.0.49-release%20%281%29.apk"
-
+          curl -L -o app/CHSN.apk "https://github.com/kapiljain630/CHSNAppium/releases/download/v2.0.49/CHSN-2.0.49-release.1.apk"
           ls -lh app/CHSN.apk
           
           file app/CHSN.apk
