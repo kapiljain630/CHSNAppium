@@ -55,9 +55,20 @@ jobs:
         disable-animations: true
         script: |
           adb devices
+        
+          curl -L -o app/CHSN.apk \
+            https://github.com/kapiljain630/CHSNAppium/releases/download/v2.0.49/CHSN-2.0.49-release%20%281%29.apk
+        
+          adb install -r app/CHSN.apk
+        
+          adb shell pm list packages | grep com.chsn
+        
           appium --allow-insecure=uiautomator2:chromedriver_autodownload > appium.log 2>&1 &
+        
           sleep 10
+        
           curl http://127.0.0.1:4723/status
+        
           mvn -B test --file pom.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
