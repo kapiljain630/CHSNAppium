@@ -56,8 +56,7 @@ jobs:
         script: |
           adb devices
         
-          curl -L -o app/CHSN.apk \
-            https://github.com/kapiljain630/CHSNAppium/releases/download/v2.0.49/CHSN-2.0.49-release%20%281%29.apk
+          curl -L -o app/CHSN.apk "https://github.com/kapiljain630/CHSNAppium/releases/download/v2.0.49/CHSN-2.0.49-release%20%281%29.apk"
         
           adb install -r app/CHSN.apk
         
