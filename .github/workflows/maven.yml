@@ -80,9 +80,9 @@ jobs:
           curl http://127.0.0.1:4723/status
         
           # Run tests
-          set +e
-          mvn -B test --file pom.xml
-          TEST_EXIT_CODE=$?
+          TEST_EXIT_CODE=0
+
+          mvn -B test --file pom.xml || TEST_EXIT_CODE=$?
         
           echo "Maven test exit code: $TEST_EXIT_CODE"
         
