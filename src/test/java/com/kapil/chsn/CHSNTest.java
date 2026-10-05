@@ -27,7 +27,8 @@ public class CHSNTest extends BaseTest {
 
         SearchPage searchPage = new SearchPage(driver);
 
-        assertTrue(searchPage.isFeaturedGamesDisplayed());
+       // assertTrue(searchPage.isFeaturedGamesDisplayed());
+       assertTrue(false);
         assertTrue(searchPage.isFeaturedVideosDisplayed());
         assertTrue(searchPage.isBackButtonDisplayed());
 
