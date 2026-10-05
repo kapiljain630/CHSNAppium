@@ -69,10 +69,8 @@ jobs:
           adb shell pm list packages | grep com.chsn
         
           # Start emulator recording
-          adb exec-out screenrecord --time-limit 180 --output-format=h264 - > emulator-test.h264 &
+          adb shell screenrecord --time-limit 180 /sdcard/emulator-test.mp4 &
           RECORD_PID=$!
-        
-          ffmpeg -version
         
           # Start Appium
           appium --allow-insecure=uiautomator2:chromedriver_autodownload > appium.log 2>&1 &
@@ -90,13 +88,13 @@ jobs:
         
           # Stop recording
           kill $RECORD_PID 2>/dev/null || true
-          sleep 3
         
-          # Convert recording to MP4
-          ffmpeg -y -f h264 -i emulator-test.h264 -c:v copy emulator-test.mp4 || true
+          sleep 5
         
-          echo "Recording files:"
-          ls -lh emulator-test.h264 || true
+          # Pull recording from emulator
+          adb pull /sdcard/emulator-test.mp4 emulator-test.mp4 || true
+        
+          echo "Recording file:"
           ls -lh emulator-test.mp4 || true
         
           exit $TEST_EXIT_CODE
