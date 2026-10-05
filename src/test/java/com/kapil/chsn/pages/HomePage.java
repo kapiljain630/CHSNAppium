@@ -38,11 +38,13 @@ public class HomePage {
 
     public HomePage(AndroidDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
 
- public void clickSearch() {
-    driver.findElement(searchButton).click();
+public void clickSearch() {
+    wait.until(
+        ExpectedConditions.elementToBeClickable(searchButton)
+    ).click();
 }
 
 public void clickDoItLater() {

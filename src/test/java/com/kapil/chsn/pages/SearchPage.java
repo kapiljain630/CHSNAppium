@@ -73,7 +73,7 @@ private final By backButton =
 
     public SearchPage(AndroidDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
 
 public void enterSearchText(String text) {
