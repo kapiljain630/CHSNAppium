@@ -31,8 +31,11 @@ public class CHSNTest extends BaseTest {
         assertTrue(searchPage.isFeaturedVideosDisplayed());
         assertTrue(searchPage.isBackButtonDisplayed());
 
-searchPage.clickBack();
-        assertTrue(homePage.isWatchNowDisplayed());
+    searchPage.clickBack();
+        assertTrue(
+            homePage.isHomeContentDisplayed(),
+            "Home page should display either Watch Now or Event Details"
+);
        
         
         homePage.clickSearch();

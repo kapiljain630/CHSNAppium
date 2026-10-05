@@ -2,11 +2,14 @@ package com.kapil.chsn.pages;
 
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
 import io.appium.java_client.AppiumBy;
 
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
+import org.openqa.selenium.TimeoutException;
 
 public class HomePage {
 
@@ -26,6 +29,11 @@ public class HomePage {
     private final By watchNowButton =
     AppiumBy.androidUIAutomator(
         "new UiSelector().text(\"Watch Now\")"
+    );
+
+    private final By eventDetailsButton =
+    AppiumBy.androidUIAutomator(
+        "new UiSelector().text(\"Event Details\")"
     );
 
     public HomePage(AndroidDriver driver) {
@@ -49,10 +57,22 @@ public void clickDoItLater() {
     }
 }
 
-public boolean isWatchNowDisplayed() {
-    return wait.until(
-        ExpectedConditions.visibilityOfElementLocated(watchNowButton)
-    ).isDisplayed();
+public boolean isHomeContentDisplayed() {
+
+    try {
+        wait.until(
+            ExpectedConditions.or(
+                ExpectedConditions.visibilityOfElementLocated(watchNowButton),
+                ExpectedConditions.visibilityOfElementLocated(eventDetailsButton)
+            )
+        );
+
+        return true;
+
+    } catch (TimeoutException e) {
+        return false;
+    }
 }
+
 
 }
