@@ -64,7 +64,26 @@ jobs:
         
           adb shell pm list packages | grep com.chsn
         
-          adb shell screenrecord --time-limit 180 /sdcard/emulator-test.mp4 &
+          # Start emulator recording
+          adb exec-out screenrecord --time-limit 180 --output-format=h264 - > emulator-test.h264 &
+          RECORD_PID=$!
+        
+          # Always finalize recording when this script exits
+          cleanup() {
+            echo "Stopping emulator recording..."
+            kill $RECORD_PID 2>/dev/null || true
+            sleep 3
+        
+            echo "Converting recording to MP4..."
+            ffmpeg -y -f h264 -i emulator-test.h264 -c:v copy emulator-test.mp4 || true
+        
+            ls -lh emulator-test.h264 || true
+            ls -lh emulator-test.mp4 || true
+          }
+        
+          trap cleanup EXIT
+        
+          ffmpeg -version
         
           appium --allow-insecure=uiautomator2:chromedriver_autodownload > appium.log 2>&1 &
         
@@ -72,19 +91,7 @@ jobs:
         
           curl http://127.0.0.1:4723/status
         
-          set +e
-        
           mvn -B test --file pom.xml
-        
-          TEST_EXIT_CODE=$?
-        
-          adb shell "pkill -INT screenrecord" || true
-        
-          sleep 3
-        
-          adb pull /sdcard/emulator-test.mp4 emulator-test.mp4 || true
-        
-          exit $TEST_EXIT_CODE
     - name: Upload emulator video
       if: always()
       uses: actions/upload-artifact@v4
@@ -92,3 +99,6 @@ jobs:
         name: emulator-test-video
         path: emulator-test.mp4
         if-no-files-found: warn
+        compression-level: 6
+        overwrite: false
+        include-hidden-files: false
