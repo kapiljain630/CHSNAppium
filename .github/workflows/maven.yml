@@ -86,15 +86,20 @@ jobs:
         
           echo "Maven test exit code: $TEST_EXIT_CODE"
         
-          # Stop recording
-          kill $RECORD_PID 2>/dev/null || true
-        
+          # Stop recording gracefully
+          echo "Stopping screen recording..."
+          
+          adb shell kill -2 $(adb shell pidof screenrecord) 2>/dev/null || true
+          
           sleep 5
-        
-          # Pull recording from emulator
+          
+          echo "Checking recording on emulator..."
+          adb shell ls -lh /sdcard/emulator-test.mp4 || true
+          
+          echo "Pulling recording..."
           adb pull /sdcard/emulator-test.mp4 emulator-test.mp4 || true
-        
-          echo "Recording file:"
+          
+          echo "Checking recording locally..."
           ls -lh emulator-test.mp4 || true
         
           exit $TEST_EXIT_CODE
