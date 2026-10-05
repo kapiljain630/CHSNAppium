@@ -55,19 +55,16 @@ jobs:
         disable-animations: true
         script: |
           adb devices
-          
+        
           mkdir -p app
         
           curl -L -o app/CHSN.apk "https://github.com/kapiljain630/CHSNAppium/releases/download/v2.0.49/CHSN-2.0.49-release.1.apk"
-          ls -lh app/CHSN.apk
-          
-          file app/CHSN.apk
-          
-          unzip -t app/CHSN.apk | head
-          
+        
           adb install -r app/CHSN.apk
         
           adb shell pm list packages | grep com.chsn
+        
+          adb shell screenrecord --time-limit 180 /sdcard/emulator-test.mp4 &
         
           appium --allow-insecure=uiautomator2:chromedriver_autodownload > appium.log 2>&1 &
         
@@ -75,4 +72,23 @@ jobs:
         
           curl http://127.0.0.1:4723/status
         
+          set +e
+        
           mvn -B test --file pom.xml
+        
+          TEST_EXIT_CODE=$?
+        
+          adb shell "pkill -INT screenrecord" || true
+        
+          sleep 3
+        
+          adb pull /sdcard/emulator-test.mp4 emulator-test.mp4 || true
+        
+          exit $TEST_EXIT_CODE
+    - name: Upload emulator video
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: emulator-test-video
+        path: emulator-test.mp4
+        if-no-files-found: warn
