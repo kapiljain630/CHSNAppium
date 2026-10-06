@@ -12,7 +12,6 @@ import io.appium.java_client.android.AndroidDriver;
 
 public class VideoDetailPage {
 
-    private AndroidDriver driver;
     private WebDriverWait wait;
 
 
@@ -37,7 +36,6 @@ public class VideoDetailPage {
         AppiumBy.accessibilityId("Back");
 
     public VideoDetailPage(AndroidDriver driver) {
-        this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
 

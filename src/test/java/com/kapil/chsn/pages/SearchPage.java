@@ -13,8 +13,8 @@ import java.util.List;
 
 public class SearchPage {
 
-    private AndroidDriver driver;
-    private WebDriverWait wait;
+    private final AndroidDriver driver;
+    private final WebDriverWait wait;
 
     private final By searchInput =
         AppiumBy.className("android.widget.EditText");
@@ -219,7 +219,9 @@ public boolean isBackButtonDisplayed() {
 }
 
 public void clickBack() {
-    driver.findElement(backButton).click();
+    wait.until(
+        ExpectedConditions.elementToBeClickable(backButton)
+    ).click();
 }
 
 public String getFirstVideoTitle() {

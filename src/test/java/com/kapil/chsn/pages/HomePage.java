@@ -1,19 +1,17 @@
 package com.kapil.chsn.pages;
 
-import io.appium.java_client.android.AndroidDriver;
+import java.time.Duration;
+
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
-import io.appium.java_client.AppiumBy;
-
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
-import org.openqa.selenium.TimeoutException;
+
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.AndroidDriver;
 
 public class HomePage {
 
-    private AndroidDriver driver;
     private WebDriverWait wait;
 
 
@@ -37,7 +35,6 @@ public class HomePage {
     );
 
     public HomePage(AndroidDriver driver) {
-        this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
 
@@ -54,9 +51,9 @@ public void clickDoItLater() {
             ExpectedConditions.elementToBeClickable(doItLaterButton)
         ).click();
 
-    } catch (Exception e) {
-        System.out.println("Do it later popup not displayed. Continuing...");
-    }
+    } catch (TimeoutException e) {
+    System.out.println("Do it later popup not displayed. Continuing...");
+}
 }
 
 public boolean isHomeContentDisplayed() {
