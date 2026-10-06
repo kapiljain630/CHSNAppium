@@ -79,33 +79,33 @@ jobs:
         
           curl http://127.0.0.1:4723/status
         
-          # Run tests
-          mvn -B test --file pom.xml || echo $? > test_exit_code.txt
-
-          echo "Stopping screen recording..."
+            # Run tests and preserve the Maven exit code
+          bash -c '
+            mvn -B test --file pom.xml
+            TEST_EXIT_CODE=$?
         
-          adb shell kill -2 $(adb shell pidof screenrecord) 2>/dev/null || true
+            echo "Maven test exit code: $TEST_EXIT_CODE"
         
-          sleep 5
+            echo "Stopping screen recording..."
         
-          echo "Checking recording on emulator..."
+            adb shell kill -2 $(adb shell pidof screenrecord) 2>/dev/null || true
         
-          adb shell ls -lh /sdcard/emulator-test.mp4 || true
+            sleep 5
         
-          echo "Pulling recording..."
+            echo "Checking recording on emulator..."
         
-          adb pull /sdcard/emulator-test.mp4 emulator-test.mp4 || true
+            adb shell ls -lh /sdcard/emulator-test.mp4 || true
         
-          echo "Checking recording locally..."
+            echo "Pulling recording..."
         
-          ls -lh emulator-test.mp4 || true
+            adb pull /sdcard/emulator-test.mp4 emulator-test.mp4 || true
         
-          # Return Maven result
-          TEST_EXIT_CODE=$(cat test_exit_code.txt 2>/dev/null || echo 0)
+            echo "Checking recording locally..."
         
-          echo "Maven test exit code: $TEST_EXIT_CODE"
+            ls -lh emulator-test.mp4 || true
         
-          if [ "$TEST_EXIT_CODE" -ne 0 ]; then exit "$TEST_EXIT_CODE"; fi
+            exit $TEST_EXIT_CODE
+          '
     - name: Upload emulator video
       if: always()
       uses: actions/upload-artifact@v4
