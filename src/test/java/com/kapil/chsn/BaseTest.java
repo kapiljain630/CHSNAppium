@@ -3,6 +3,7 @@ package com.kapil.chsn;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import java.net.URL;
 
@@ -18,13 +19,11 @@ public void setup() throws Exception {
 
     Properties config = new Properties();
 
-    FileInputStream file =
-        new FileInputStream("src/test/resources/config.properties");
+try (FileInputStream file =
+         new FileInputStream("src/test/resources/config.properties")) {
 
     config.load(file);
-
-    System.out.println("App Package: " + config.getProperty("appPackage"));
-    System.out.println("App Activity: " + config.getProperty("appActivity"));
+}
 
     UiAutomator2Options options = new UiAutomator2Options();
 
@@ -46,5 +45,12 @@ options.setAutoGrantPermissions(
         new URL(config.getProperty("serverUrl")),
         options
     );
+}
+
+@AfterEach
+public void tearDown() {
+    if (driver != null) {
+        driver.quit();
+    }
 }
 }
